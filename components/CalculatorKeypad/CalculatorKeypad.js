@@ -9,7 +9,7 @@ function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onSubmit }) 
     <section className={styles.container}>
       <div className={styles.numericPad}>
         {NUMERIC_KEYPAD.map((num) => (
-          <button onClick={(e) => onNumPress(e.target.textContent)}>
+          <button key={num} onClick={(e) => onNumPress(e.target.textContent)}>
             {num}
           </button>
           )
@@ -17,10 +17,10 @@ function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onSubmit }) 
       </div>
       <div className={styles.operationsPad}>
         {OPERATIONS_KEYPAD.map((num) => (
-          <button onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
+          <button key={num} onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
             {num}
           </button>
-        )
+          )
         )}
       </div>
       <div className={styles.resultsPad}>
