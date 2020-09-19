@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  font-weight: bold;
+  height: 50vh;
+  min-height: 250px;
+  max-height: 600px;
+  border: 1px solid var(--lp-grey);
+  background: #efefef;
+}
+
+.container button {
+  border-style: none;
+  font-size: 2rem;
+}
+
+.numericPad {
+  display: flex;
+  flex-wrap: wrap;
+  width: 75%;
+}
+
+.numericPad button{
+  display: flex;
+  flex: 0 0 33.33%;
+  border: 1px solid var(--lp-grey);
+  align-items: center;
+  justify-content: center;
+}
+
+.operationsPad {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}
+
+.operationsPad button {
+  display: flex;
+  flex: 0 0 16.69%;
+  border: 1px solid var(--lp-grey);
+  align-items: center;
+  justify-content: center;
+}
+
+.resultsPad {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}
+.resultsPad button{
+  display: flex;
+  flex: 0 0 50%;
+  border: 1px solid var(--lp-grey);
+  align-items: center;
+  justify-content: center;
+  background-color: var(--lp-grey);
+  flex: 0 0 30%;
+}
+
+.resultsPad button:nth-child(2) {
+  background-color: var(--lp-orange);
+  color: var(--lp-white);
+  font-weight: bolder;
+  flex: 0 0 70%;
+}

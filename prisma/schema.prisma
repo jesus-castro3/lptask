@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Balance {
+  id        Int       @default(autoincrement()) @id
+  balance   Float?
+  userId    Int       @default(autoincrement()) @unique
+  createdAt DateTime? @default(now())
+  author    Users     @relation(fields: [userId], references: [id])
+}
+
+model Rate {
+  id   Int        @default(autoincrement()) @id
+  rate Float
+  type operations @unique
+}
+
+model Users {
+  id        Int      @default(autoincrement()) @id
+  user      String
+  createdAt DateTime @default(now())
+  balance   Balance?
+}
+
+enum operations {
+  add
+  divide
+  random
+  root
+  subtract
+  times
+}

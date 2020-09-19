@@ -1,0 +1,19 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model Balance {
+  id        Int @id @default(autoincrement())
+  balance   Float @default(0.00)
+  updatedAt DateTime @updatedAt()
+  createAt  DateTime @default(now())
+}

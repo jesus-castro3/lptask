@@ -8,8 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^2.7.1",
+    "decimal.js": "^10.2.0",
     "next": "9.5.3",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
     "react": "16.13.1",
     "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.7.1"
   }
 }

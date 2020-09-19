@@ -1,5 +1,14 @@
+:root {
+  /* global palette colors */
+  --lp-green: #61CE70;
+  --lp-orange: #FF9100;
+  --lp-blue: #1A62FF;
+  --lp-white: #F7FBFF;
+  --lp-grey: #CAC0D8;
+}
 html,
 body {
+  font-size: 10px;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,

@@ -1,0 +1,17 @@
+.container {
+  padding: 2rem;
+  font-size: 2rem;
+  border: 0.1rem solid var(--lp-grey);
+}
+
+.container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.container li {
+  list-style: none;
+}
