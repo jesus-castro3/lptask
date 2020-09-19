@@ -25,7 +25,7 @@ function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onSubmit }) 
       </div>
       <div className={styles.resultsPad}>
         <button onClick={onDelete}>Del</button>
-        <button>=</button>
+        <button onClick={onSubmit}>=</button>
       </div>
     </section>
   )

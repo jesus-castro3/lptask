@@ -6,7 +6,7 @@ import styles from './calculator.module.css';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
 
 function CalculatorPage({ userData }) {
-  const { balance } = userData;
+  const [balance, setBalance] = useState(userData.balance);
   // visual purpose only
   const [windowList, setWindowList] = useState([]);
   // structured list will be sent to the api
@@ -51,8 +51,35 @@ function CalculatorPage({ userData }) {
     }
   }
 
-  const handleSubmit = () => {
-    
+  const handleDelete = () => {
+    setWindowList(windowList.slice(0, windowList.length - 1))
+    if(windowList[windowList.length - 1] === operationList[operationList.length -1]) {
+      setOperationList(operationList.slice(0, operationList.length-1))
+    } else {
+      let lastIdx = numList.length - 1;
+      let currentString = numList[lastIdx];
+      let newString = currentString.slice(0, currentString.length - 1);
+      if(newString.length) {
+        numList[lastIdx] = newString;
+        setNumList([...numList]);
+      } else {
+        setNumList(numList.slice(0, numList.length - 1));
+      }
+    }
+  }
+
+  async function onSubmit() {
+    if (operationList.length === 1) {
+      let [type] = operationList;
+      let response = await fetch(`http://localhost:3000/api/operations/add`, { 
+        method: 'post', 
+        body: JSON.stringify({ numbers: numList}), 
+      });
+      let userData = await response.json();
+      setBalance(userData.balance);
+      console.log('RESULTS::', userData);
+
+    }
   };
 
   return(
@@ -63,9 +90,9 @@ function CalculatorPage({ userData }) {
       <CalculatorWindow windowList={windowList}/>
       <CalculatorKeypad
         onNumPress={(val) => handleNumPress(val)}
-        onDelete={()=> setWindowList(windowList.slice(0, windowList.length-1))}
+        onDelete={()=> handleDelete()}
         onOperationPress={(val) => handleOperationPress(val)}
-        onSubmit={()=> console.log('press')}
+        onSubmit={() => onSubmit()}
       />
     </main>
   );
