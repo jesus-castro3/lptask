@@ -1,13 +1,13 @@
 import updateBalance from '../../../services/updateBalance';
 
 export default (req, res) => {
-  if (req.method === 'GET') {
-    return handleGET(req, res);
+  if (req.method === 'POST') {
+    return handlePOST(req, res);
   }
   return res.send(`${req.method} Method not supported`);
 }
 
-async function handleGET(req, res) {
+async function handlePOST(req, res) {
   const balance = await updateBalance();
 
   let randomString = '';

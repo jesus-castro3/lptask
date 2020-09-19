@@ -5,6 +5,14 @@ import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad
 import styles from './calculator.module.css';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
 
+const OPERATIONS = {
+  '+': 'add',
+  '-': 'subtract',
+  'x': 'times',
+  '/': 'divide',
+  'random': 'random',
+  'root': 'root'
+}
 function CalculatorPage({ userData }) {
   const [balance, setBalance] = useState(userData.balance);
   // visual purpose only
@@ -27,14 +35,14 @@ function CalculatorPage({ userData }) {
 
   const handleOperationPress = (val) => {
     // make sure the last item is a num not another operation char
-    if (Number(windowList[windowList.length - 1])) {
+    if (!isNaN(windowList[windowList.length - 1])) {
       setWindowList([...windowList, val]);
       handleKeyPress(val)
     }
   };
 
   const handleKeyPress = (val) => {
-    if (Number(val) || val === '.' && numList.indexOf('.') === -1) {
+    if (!isNaN(val) || val === '.' && numList.indexOf('.') === -1) {
       if(breakNum) {
         setNumList([...numList, val]);
         setBreakNum(false);
@@ -45,7 +53,7 @@ function CalculatorPage({ userData }) {
         setNumList([...numList]);
       }
     }
-    if(!Number(val) && val !== '.') {
+    if(isNaN(val) && val !== '.') {
       setOperationList([...operationList, val]);
       setBreakNum(true)
     }
@@ -69,16 +77,19 @@ function CalculatorPage({ userData }) {
   }
 
   async function onSubmit() {
-    if (operationList.length === 1) {
+    console.log(operationList.length, numList );
+    if(operationList.length && numList.length > 1) {
       let [type] = operationList;
-      let response = await fetch(`http://localhost:3000/api/operations/add`, { 
+      let response = await fetch(`http://localhost:3000/api/operations/${OPERATIONS[type]}`, {
         method: 'post', 
         body: JSON.stringify({ numbers: numList}), 
       });
-      let userData = await response.json();
-      setBalance(userData.balance);
-      console.log('RESULTS::', userData);
-
+      let { balance, total } = await response.json();
+      console.log(balance, total);
+      setBalance(balance);
+      setWindowList([total]);
+      setOperationList([]);
+      setNumList([total]);
     }
   };
 

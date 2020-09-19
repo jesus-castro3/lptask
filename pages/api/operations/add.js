@@ -4,12 +4,12 @@ import updateBalance from '../../../services/updateBalance';
 
 export default (req, res) => {
   if(req.method === 'POST') {
-    return handleGET(req, res);
+    return handlePost(req, res);
   }
   return res.send(`${req.method} Method not supported`);
 }
 
-async function handleGET(req, res) {
+async function handlePost(req, res) {
   const balance = await updateBalance();
   
   const { numbers } = JSON.parse(req.body);
