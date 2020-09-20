@@ -25,10 +25,8 @@ function CalculatorPage({ userData }) {
   const handleNumPress = (val) => {
     // we only allow one decimal(.) aggregation
     if (Number(val)) {
-      setWindowList([...windowList, val]);
       handleKeyPress(val);
     } else if (windowList.indexOf('.') === -1) {
-      setWindowList([...windowList, val]);
       handleKeyPress(val);
     }
   };
@@ -36,12 +34,18 @@ function CalculatorPage({ userData }) {
   const handleOperationPress = (val) => {
     // make sure the last item is a num not another operation char
     if (!isNaN(windowList[windowList.length - 1])) {
-      setWindowList([...windowList, val]);
       handleKeyPress(val)
     }
   };
 
   const handleKeyPress = (val) => {
+    if(operationList.includes('random')) {
+      setOperationList([]);
+      setWindowList([]);
+      setWindowList([val]);
+    } else {
+      setWindowList([...windowList, val]);
+    }
     if (!isNaN(val) || val === '.' && numList.indexOf('.') === -1) {
       if(breakNum) {
         setNumList([...numList, val]);
@@ -77,7 +81,6 @@ function CalculatorPage({ userData }) {
   }
 
   async function onSubmit() {
-    console.log(operationList.length, numList );
     if(operationList.length && numList.length > 1) {
       let [type] = operationList;
       let response = await fetch(`http://localhost:3000/api/operations/${OPERATIONS[type]}`, {
@@ -85,13 +88,26 @@ function CalculatorPage({ userData }) {
         body: JSON.stringify({ numbers: numList}), 
       });
       let { balance, total } = await response.json();
-      console.log(balance, total);
       setBalance(balance);
       setWindowList([total]);
       setOperationList([]);
       setNumList([total]);
     }
   };
+
+  async function handleRandomPress() {
+    let response = await fetch(`http://localhost:3000/api/operations/random`, {
+      method: 'GET',
+    });
+    let {
+      balance,
+      total
+    } = await response.json();
+    setBalance(balance);
+    setWindowList([total]);
+    setOperationList(['random']);
+    setNumList(['']);
+  }
 
   return(
     <main className={styles.mainContainer}>
@@ -101,9 +117,10 @@ function CalculatorPage({ userData }) {
       <CalculatorWindow windowList={windowList}/>
       <CalculatorKeypad
         onNumPress={(val) => handleNumPress(val)}
-        onDelete={()=> handleDelete()}
+        onRandomPress={handleRandomPress}
+        onDelete={handleDelete}
         onOperationPress={(val) => handleOperationPress(val)}
-        onSubmit={() => onSubmit()}
+        onSubmit={onSubmit}
       />
     </main>
   );

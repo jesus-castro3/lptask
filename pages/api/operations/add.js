@@ -13,7 +13,6 @@ async function handlePost(req, res) {
   const balance = await updateBalance();
   
   const { numbers } = JSON.parse(req.body);
-  console.log(typeof req.body)
   const total = numbers.reduce((accum, num) => Decimal(num).add(accum).toNumber(), 0);
   res.statusCode = 201;
   res.json({ total, balance });

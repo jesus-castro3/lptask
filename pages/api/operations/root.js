@@ -13,8 +13,17 @@ async function handlePOST(req, res) {
   //TODO add valid user and type
   const balance = await updateBalance();
 
-  const { number } = JSON.parse(req.body);
-  const total = Decimal.sqrt(number).toNumber();
+  const { numbers } = JSON.parse(req.body);
+  const [first, second] = numbers;
+  let total = 0;
+  // do we still have a remainder
+  // multiply it by root
+  if (second) {
+    total = Decimal(first).times(Decimal.sqrt(second)).toNumber();
+  } else {
+    total = Decimal.sqrt(first).toNumber();
+  }
+  console.log(total, first, second)
   res.statusCode = 201;
   res.json({ total, balance });
 }

@@ -35,7 +35,7 @@
 
 .operationsPad button {
   display: flex;
-  flex: 0 0 16.69%;
+  flex: 0 0 25%;
   border: 1px solid var(--lp-grey);
   align-items: center;
   justify-content: center;
@@ -53,12 +53,13 @@
   align-items: center;
   justify-content: center;
   background-color: var(--lp-grey);
-  flex: 0 0 30%;
+  border-bottom: 1px solid #968ea1;
+  flex: 0 0 20%;
 }
 
-.resultsPad button:nth-child(2) {
+.resultsPad button:nth-child(4) {
   background-color: var(--lp-orange);
   color: var(--lp-white);
   font-weight: bolder;
-  flex: 0 0 70%;
+  flex: 0 0 40%;
 }

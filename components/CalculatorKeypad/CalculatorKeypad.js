@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './CalculatorKeypad.module.css';
 
 const NUMERIC_KEYPAD = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0];
-const OPERATIONS_KEYPAD = ['+', '-', 'x', '/', 'root', 'random'];
+const OPERATIONS_KEYPAD = ['+', '-', 'x', '/'];
 
-function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onSubmit }) {
+function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onRandomPress, onSubmit }) {
   return(
     <section className={styles.container}>
       <div className={styles.numericPad}>
@@ -25,6 +25,8 @@ function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onSubmit }) 
       </div>
       <div className={styles.resultsPad}>
         <button onClick={onDelete}>Del</button>
+        <button onClick={()=> console.log('root')}>Root</button>
+        <button onClick={onRandomPress}>Random</button>
         <button onClick={onSubmit}>=</button>
       </div>
     </section>
