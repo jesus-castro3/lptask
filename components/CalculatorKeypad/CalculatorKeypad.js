@@ -4,7 +4,14 @@ import styles from './CalculatorKeypad.module.css';
 const NUMERIC_KEYPAD = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0];
 const OPERATIONS_KEYPAD = ['+', '-', 'x', '/'];
 
-function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onRandomPress, onSubmit }) {
+function CalculatorKeypad({
+  onNumPress,
+  onOperationPress,
+  onDelete,
+  onRandomPress,
+  onSubmit,
+  disableOperationPad
+}) {
   return(
     <section className={styles.container}>
       <div className={styles.numericPad}>
@@ -17,7 +24,7 @@ function CalculatorKeypad({ onNumPress, onOperationPress, onDelete, onRandomPres
       </div>
       <div className={styles.operationsPad}>
         {OPERATIONS_KEYPAD.map((num) => (
-          <button key={num} onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
+          <button disabled={disableOperationPad} key={num} onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
             {num}
           </button>
           )

@@ -21,77 +21,60 @@ function CalculatorPage({ userData }) {
   const [numList, setNumList] = useState(['']);
   const [operationList, setOperationList] = useState([]);
   const [breakNum, setBreakNum] = useState(false);
+  const [disableOperationPad, setDisableOperationPad] = useState(true);
 
   const handleNumPress = (val) => {
+    setDisableOperationPad(false);
     // we only allow one decimal(.) aggregation
-    if (Number(val)) {
-      handleKeyPress(val);
-    } else if (windowList.indexOf('.') === -1) {
-      handleKeyPress(val);
-    }
+    setWindowList([...windowList, val]);
   };
 
   const handleOperationPress = (val) => {
+    setDisableOperationPad(true);
     // make sure the last item is a num not another operation char
-    if (!isNaN(windowList[windowList.length - 1])) {
-      handleKeyPress(val)
-    }
+    setWindowList([...windowList, val]);
   };
 
-  const handleKeyPress = (val) => {
-    if(operationList.includes('random')) {
-      setOperationList([]);
-      setWindowList([]);
-      setWindowList([val]);
-    } else {
-      setWindowList([...windowList, val]);
-    }
-    if (!isNaN(val) || val === '.' && numList.indexOf('.') === -1) {
-      if(breakNum) {
-        setNumList([...numList, val]);
-        setBreakNum(false);
-      } else {
-        let current = numList[numList.length - 1];
-        current += val;
-        numList[numList.length - 1] = current;
-        setNumList([...numList]);
-      }
-    }
-    if(isNaN(val) && val !== '.') {
-      setOperationList([...operationList, val]);
-      setBreakNum(true)
-    }
-  }
-
   const handleDelete = () => {
-    setWindowList(windowList.slice(0, windowList.length - 1))
-    if(windowList[windowList.length - 1] === operationList[operationList.length -1]) {
-      setOperationList(operationList.slice(0, operationList.length-1))
-    } else {
-      let lastIdx = numList.length - 1;
-      let currentString = numList[lastIdx];
-      let newString = currentString.slice(0, currentString.length - 1);
-      if(newString.length) {
-        numList[lastIdx] = newString;
-        setNumList([...numList]);
-      } else {
-        setNumList(numList.slice(0, numList.length - 1));
-      }
+    if(windowList.length) {
+      const newWindowList = windowList.slice(0, windowList.length - 1);
+      setWindowList(newWindowList);
     }
   }
 
   async function onSubmit() {
-    if(operationList.length && numList.length > 1) {
-      let [type] = operationList;
+    const numbers = windowList.join('').split(/x|\+|\/|\-/);
+    const operations = windowList.join('').replace(/[0-9]/g, '').split('');
+    
+    if (numbers.length < 2) return;
+
+    const [first] = operations;
+    const isSameOperation = operations.every(o => first === o);
+    
+    if(isSameOperation) {
+      const [type] = operations;
       let response = await fetch(`http://localhost:3000/api/operations/${OPERATIONS[type]}`, {
-        method: 'post', 
-        body: JSON.stringify({ numbers: numList}), 
+        method: 'post',
+        body: JSON.stringify({ numbers })
       });
       let { balance, total } = await response.json();
-      setBalance(balance);
       setWindowList([total]);
-      setOperationList([]);
-      setNumList([total]);
+      setBalance(balance);
+    } else {
+      // handle calculation with different operations e.g : 5+545/5545*44323
+      let response = await fetch(`http://localhost:3000/api/operations`, {
+        method: 'post',
+        body: JSON.stringify({
+          numbers,
+          operations
+        })
+      });
+      let {
+        balance,
+        total
+      } = await response.json();
+      setWindowList([total]);
+      setBalance(balance);
     }
   };
 
@@ -116,6 +99,7 @@ function CalculatorPage({ userData }) {
       />
       <CalculatorWindow windowList={windowList}/>
       <CalculatorKeypad
+        disableOperationPad={disableOperationPad}
         onNumPress={(val) => handleNumPress(val)}
         onRandomPress={handleRandomPress}
         onDelete={handleDelete}

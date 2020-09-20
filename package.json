@@ -11,6 +11,7 @@
     "@prisma/client": "^2.7.1",
     "decimal.js": "^10.2.0",
     "next": "9.5.3",
+    "nookies": "^2.4.0",
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
     "react": "16.13.1",
