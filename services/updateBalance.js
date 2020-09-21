@@ -2,8 +2,9 @@ import Decimal from 'decimal.js';
 import { PrismaClient } from "@prisma/client";
 
 // TODO: remove the fixed defaults, for testing purposes
-export default async function updateBalance(userId = 14, type = 'add'){
+export default async function updateBalance(id, type){
   const prisma = new PrismaClient();
+  const userId = Number(id);
   try {    
     const { rate } = await prisma.rate.findOne({
       select: { rate: true },

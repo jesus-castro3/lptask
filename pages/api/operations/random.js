@@ -1,14 +1,16 @@
+import { RANDOM } from '../../../contants';
 import updateBalance from '../../../services/updateBalance';
 
 export default (req, res) => {
-  if (req.method === 'GET') {
-    return handleGET(req, res);
+  if (req.method === 'POST') {
+    return handlePOST(req, res);
   }
   return res.send(`${req.method} Method not supported`);
 }
 
-async function handleGET(req, res) {
-  const balance = await updateBalance();
+async function handlePOST(req, res) {
+  const { cookies } = req;
+  const balance = await updateBalance(cookies.userId, RANDOM);
 
   let randomString = '';
   // we generate a 24 char string
@@ -21,6 +23,5 @@ async function handleGET(req, res) {
     }
   }
   res.statusCode = 201;
-  console.log(balance, randomString);
   res.json({ total: randomString, balance });
 }

@@ -1,5 +1,6 @@
 import Decimal from 'decimal.js';
 import updateBalance from '../../../services/updateBalance';
+import { DIVIDE } from '../../../contants';
 
 export default (req, res) => {
   if(req.method === 'POST') {
@@ -9,9 +10,9 @@ export default (req, res) => {
 }
     
 async function handlePOST(req, res) {
-  //TODO add valid user and type
-  const balance = await updateBalance();
+  const { cookies } = req;
   const { numbers } = JSON.parse(req.body);
+  const balance = await updateBalance(cookies.userId, DIVIDE);
   const first = numbers.shift();
   const total = numbers.reduce((accum, num) => Decimal.div(accum, num).toNumber(), first);
   res.statusCode = 201;

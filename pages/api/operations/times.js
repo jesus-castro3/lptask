@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import { TIMES } from '../../../contants';
 
 import updateBalance from '../../../services/updateBalance';
 
@@ -10,9 +11,8 @@ export default (req, res) => {
 }
 
 async function handlePOST(req, res) {
-  //TODO add valid user and type
-  const balance = await updateBalance();
-
+  const { cookies } = req;
+  const balance = await updateBalance(cookies.userId, TIMES);
   const { numbers } = JSON.parse(req.body);
   const first = numbers.shift();
   const total = numbers.reduce((accum, num) => Decimal(accum).times(num).toNumber(), first);

@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+import { setCookie } from 'nookies';
 
 export default async(req, res) => {
   const prisma = new PrismaClient();
-  const { user } = req.body;
+  const { user } = JSON.parse(req.body);
   try {
     const result = await prisma.users.create({
       data: {
@@ -14,7 +15,12 @@ export default async(req, res) => {
         }
       }
     });
+    setCookie({ res }, 'userId', result.id, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    })
     res.statusCode = 201;
+    
     res.json({ result });
   } catch (e) {
     res.status(500);

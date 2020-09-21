@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import {parseCookies} from 'nookies';
 import BalanceBanner from '../../components/BalanceBanner/BalanceBanner';
 import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad';
 
@@ -14,6 +16,10 @@ const OPERATIONS = {
   'root': 'root'
 }
 function CalculatorPage({ userData }) {
+  const router = useRouter();
+  if(!userData) {
+    router.push('/');
+  }
   const [balance, setBalance] = useState(userData.balance);
   // visual purpose only
   const [windowList, setWindowList] = useState([]);
@@ -110,13 +116,19 @@ function CalculatorPage({ userData }) {
   );
 }
 
-export async function  getStaticProps() {
-  let response = await fetch('http://localhost:3000/api/user/14')
-  let userData = await response.json();
-  return {
-    props: {
-      userData
+export async function getServerSideProps(ctx) {
+  const cookies = parseCookies(ctx);
+  if(cookies.userId) {
+    let response = await fetch(`http://localhost:3000/api/user/${cookies.userId}`);
+    let userData = await response.json();
+    return {
+      props: {
+        userData
+      }
     }
+  }
+  return {
+    props: {}
   }
 }
 

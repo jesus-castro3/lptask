@@ -10,12 +10,11 @@ export default (req, res) => {
 
 async function handlePOST(req, res) {
   //TODO: add valid user and type
-  const balance = await updateBalance();
-  const {
-    numbers,
-    operations,
-  } = JSON.parse(req.body);
+  const { cookies } = req;
+  const { numbers, operations, } = JSON.parse(req.body);
   const first = numbers.shift();
+  const balance = await updateBalance(cookies.userId, ADD);
+
   const total = numbers.reduce((accum, num, idx) => {
     let res;
     switch (operations[idx]) {
@@ -37,6 +36,7 @@ async function handlePOST(req, res) {
     }
     return res;
   }, first);
+
   res.statusCode = 201;
   res.json({
     total,
