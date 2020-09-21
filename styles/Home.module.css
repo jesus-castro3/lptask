@@ -128,6 +128,10 @@
   letter-spacing: 0.2rem;
 }
 
+.container form {
+  box-shadow: 0 0.5rem .8rem #838383;
+}
+
 .container input, 
 .container button {
   border: .1rem solid var(--lp-grey);
@@ -135,7 +139,6 @@
   padding: 1rem;
   font-size: 1.6rem;
   letter-spacing: 0.1rem;
-  box-shadow: 0 1px 1rem #585858;
   border-style: none;
 }
 

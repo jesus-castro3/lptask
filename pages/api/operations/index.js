@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import { ADD } from '../../../contants';
 import updateBalance from '../../../services/updateBalance';
 
 export default (req, res) => {
@@ -9,7 +10,6 @@ export default (req, res) => {
 }
 
 async function handlePOST(req, res) {
-  //TODO: add valid user and type
   const { cookies } = req;
   const { numbers, operations, } = JSON.parse(req.body);
   const first = numbers.shift();

@@ -14,7 +14,8 @@ const OPERATIONS = {
   '/': 'divide',
   'random': 'random',
   'root': 'root'
-}
+};
+
 function CalculatorPage({ userData }) {
   const router = useRouter();
   if(!userData) {
@@ -50,7 +51,7 @@ function CalculatorPage({ userData }) {
 
   async function onSubmit() {
     const numbers = windowList.join('').split(/x|\+|\/|\-/);
-    const operations = windowList.join('').replace(/[0-9]/g, '').split('');
+    const operations = windowList.join('').replace(/[0-9]|e|\./g, '').split('');
     
     if (numbers.length < 2) return;
 
@@ -59,7 +60,7 @@ function CalculatorPage({ userData }) {
     
     if(isSameOperation) {
       const [type] = operations;
-      let response = await fetch(`http://localhost:3000/api/operations/${OPERATIONS[type]}`, {
+      let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${OPERATIONS[type]}`, {
         method: 'post',
         body: JSON.stringify({ numbers })
       });
@@ -68,7 +69,7 @@ function CalculatorPage({ userData }) {
       setBalance(balance);
     } else {
       // handle calculation with different operations e.g : 5+545/5545*44323
-      let response = await fetch(`http://localhost:3000/api/operations`, {
+      let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations`, {
         method: 'post',
         body: JSON.stringify({
           numbers,
@@ -85,7 +86,7 @@ function CalculatorPage({ userData }) {
   };
 
   async function handleRandomPress() {
-    let response = await fetch(`http://localhost:3000/api/operations/random`, {
+    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/operations/random`, {
       method: 'GET',
     });
     let {
@@ -119,7 +120,7 @@ function CalculatorPage({ userData }) {
 export async function getServerSideProps(ctx) {
   const cookies = parseCookies(ctx);
   if(cookies.userId) {
-    let response = await fetch(`http://localhost:3000/api/user/${cookies.userId}`);
+    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${cookies.userId}`);
     let userData = await response.json();
     return {
       props: {
