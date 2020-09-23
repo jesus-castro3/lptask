@@ -2,13 +2,13 @@ import { RANDOM } from '../../../contants';
 import updateBalance from '../../../services/updateBalance';
 
 export default (req, res) => {
-  if (req.method === 'POST') {
-    return handlePOST(req, res);
+  if (req.method === 'GET') {
+    return handleGET(req, res);
   }
   return res.send(`${req.method} Method not supported`);
 }
 
-async function handlePOST(req, res) {
+async function handleGET(req, res) {
   const { cookies } = req;
   const balance = await updateBalance(cookies.userId, RANDOM);
 

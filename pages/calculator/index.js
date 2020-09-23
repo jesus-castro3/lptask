@@ -25,9 +25,6 @@ function CalculatorPage({ userData }) {
   // visual purpose only
   const [windowList, setWindowList] = useState([]);
   // structured list will be sent to the api
-  const [numList, setNumList] = useState(['']);
-  const [operationList, setOperationList] = useState([]);
-  const [breakNum, setBreakNum] = useState(false);
   const [disableOperationPad, setDisableOperationPad] = useState(true);
 
   const handleNumPress = (val) => {
@@ -86,7 +83,7 @@ function CalculatorPage({ userData }) {
   };
 
   async function handleRandomPress() {
-    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/operations/random`, {
+    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/random`, {
       method: 'GET',
     });
     let {
@@ -95,8 +92,6 @@ function CalculatorPage({ userData }) {
     } = await response.json();
     setBalance(balance);
     setWindowList([total]);
-    setOperationList(['random']);
-    setNumList(['']);
   }
 
   return(

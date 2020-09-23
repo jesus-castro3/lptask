@@ -1,0 +1,7 @@
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#using-environment-variables
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL and SQLite.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DATABASE_URL="postgres://jhznkddfbrydla:c731caf7b33dfad03344547eb0dc68e51c862cee345af974a717a6a64356ca52@ec2-34-235-62-201.compute-1.amazonaws.com:5432/d8v0ag7198k07g"

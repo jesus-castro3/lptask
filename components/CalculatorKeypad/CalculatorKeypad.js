@@ -9,6 +9,7 @@ function CalculatorKeypad({
   onOperationPress,
   onDelete,
   onRandomPress,
+  onRootPress,
   onSubmit,
   disableOperationPad
 }) {
@@ -32,7 +33,7 @@ function CalculatorKeypad({
       </div>
       <div className={styles.resultsPad}>
         <button onClick={onDelete}>Del</button>
-        <button onClick={()=> console.log('root')}>Root</button>
+        <button onClick={onRootPress}>Root</button>
         <button onClick={onRandomPress}>Random</button>
         <button onClick={onSubmit}>=</button>
       </div>

@@ -3,9 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "local": "next dev",
+    "localbuild": "next build",
+    "start": "docker-compose up",
+    "build": "docker-compose build",
+    "clean": "npm run clean:images && npm run clean:volumes",
+    "clean:images": "docker system prune -af",
+    "clean:volumes": "docker volume prune -f",
+    "seed": "docker exec -it app node ./prisma/seed",
+    "migrate:save": "docker exec -it app prisma migrate save --experimental",
+    "migrate:up": "docker exec -it app prisma migrate up --experimental",
+    "migrate": "npm run migrate:save && npm run migrate:up"
   },
   "dependencies": {
     "@prisma/client": "^2.7.1",
