@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './CalculatorKeypad.module.css';
 
 const NUMERIC_KEYPAD = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0];
-const OPERATIONS_KEYPAD = ['+', '-', 'x', '/'];
+const OPERATIONS_KEYPAD = ['+', '-', '*', '/'];
 
 function CalculatorKeypad({
   onNumPress,

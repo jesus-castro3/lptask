@@ -11,7 +11,7 @@ import RateChart from '../../components/RateChart/RateChart';
 const OPERATIONS = {
   '+': 'add',
   '-': 'subtract',
-  'x': 'times',
+  '*': 'times',
   '/': 'divide',
   'random': 'random',
   'root': 'root'
@@ -19,29 +19,62 @@ const OPERATIONS = {
 
 function CalculatorPage({ user, rates }) {
   const router = useRouter();
+
   if(!user) return <h1>Loading</h1>
 
   const [balance, setBalance] = useState(user.balance);
   // visual purpose only
-  const [windowList, setWindowList] = useState([]);
+  const [windowList, setWindowList] = useState('');
   // structured list will be sent to the api
-  const [disableOperationPad, setDisableOperationPad] = useState(true);
+  const [disableOperationPad, setDisableOperationPad] = useState(false);
 
   useEffect(() => {
     if (!user) {
       router.push('/')
     }
   }, [user]);
+
   const handleNumPress = (val) => {
-    setDisableOperationPad(false);
-    // we only allow one decimal(.) aggregation
-    setWindowList([...windowList, val]);
+    // we can only include one decimal place in each integer operation
+    if(val === '.') {
+        // convert to array and flip it so we start from the last input
+        if(!windowList.length) {
+          return setWindowList(val);
+        }
+        const windowListArray = windowList.split('').reverse();
+        // good'ol for loop
+        let addToList = false;
+        for (let i = 0; i < windowListArray.length; i++) {
+          const element = windowListArray[i];
+          //if we find another . before another operation * / + - break out set res as false
+          if(isNaN(element) && element === '.') {
+            addToList = false
+            break;
+          } else if(isNaN(element) && element !== '.') {
+            addToList = true;
+            break;
+          }
+        }
+        if(addToList) {
+          setWindowList(windowList + val);
+        }
+
+    } else {
+      const newWindowList = windowList + val;
+      setWindowList(newWindowList);
+    }
   };
 
   const handleOperationPress = (val) => {
-    setDisableOperationPad(true);
-    // make sure the last item is a num not another operation char
-    setWindowList([...windowList, val]);
+    //cant have two operations next to eachoter
+    const newWindowList = windowList + val;
+    if(windowList.length && !isNaN(windowList[windowList.length -1])) {
+      setWindowList(newWindowList);
+    } else if (!windowList.length && val === '-') {
+      setWindowList(val);
+    } else if(!windowList.length) {
+      setWindowList('0' + val);
+    }
   };
 
   const handleDelete = () => {
@@ -52,8 +85,8 @@ function CalculatorPage({ user, rates }) {
   }
 
   async function onSubmit() {
-    const numbers = windowList.join('').split(/x|\+|\/|\-/);
-    const operations = windowList.join('').replace(/[0-9]|e|\./g, '').split('');
+    const numbers = windowList.split(/\*|\+|\/|\-/);
+    const operations = windowList.replace(/[0-9]|e|\./g, '').split('');
     
     if (numbers.length < 2) return;
 
@@ -67,22 +100,21 @@ function CalculatorPage({ user, rates }) {
         body: JSON.stringify({ numbers })
       });
       let { balance, total } = await response.json();
-      setWindowList([total]);
+      setWindowList(total + '');
       setBalance(balance);
     } else {
       // handle calculation with different operations e.g : 5+545/5545*44323
       let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations`, {
         method: 'post',
         body: JSON.stringify({
-          numbers,
-          operations
+          equation: windowList
         })
       });
       let {
         balance,
         total
       } = await response.json();
-      setWindowList([total]);
+      setWindowList(total + '');
       setBalance(balance);
     }
   };
@@ -121,10 +153,10 @@ function CalculatorPage({ user, rates }) {
           <CalculatorWindow windowList={windowList}/>
           <CalculatorKeypad
             disableOperationPad={disableOperationPad}
-            onNumPress={(val) => handleNumPress(val)}
+            onNumPress={handleNumPress}
             onRandomPress={handleRandomPress}
             onDelete={handleDelete}
-            onOperationPress={(val) => handleOperationPress(val)}
+            onOperationPress={handleOperationPress}
             onSubmit={onSubmit}
           />
         </div>
@@ -136,8 +168,7 @@ function CalculatorPage({ user, rates }) {
 
 export async function getServerSideProps(ctx) {
   const cookies = parseCookies(ctx);
-  console.log(ctx.setHeader);
-  if(cookies.userId) {
+  if (cookies.userId) {
     let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${cookies.userId}`);
     let ratesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rates`);
     let { rates } = await ratesResponse.json();

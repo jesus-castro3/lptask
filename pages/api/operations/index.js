@@ -1,6 +1,7 @@
 import Decimal from 'decimal.js';
 import { ADD } from '../../../contants';
 import updateBalance from '../../../services/updateBalance';
+import stringCalculator from 'string-calculator';
 
 export default (req, res) => {
   if (req.method === 'POST') {
@@ -11,31 +12,10 @@ export default (req, res) => {
 
 async function handlePOST(req, res) {
   const { cookies } = req;
-  const { numbers, operations, } = JSON.parse(req.body);
-  const first = numbers.shift();
+  const { equation } = JSON.parse(req.body);
   const balance = await updateBalance(cookies.userId, ADD);
 
-  const total = numbers.reduce((accum, num, idx) => {
-    let res;
-    switch (operations[idx]) {
-      case '+':
-        res = Decimal(num).add(accum).toNumber();
-        break;
-      case '-':
-        res = Decimal(accum).sub(num).toNumber();
-        break;
-      case 'x':
-        res = Decimal(accum).times(num).toNumber()
-        break;
-      case '/':
-        res = Decimal.div(accum, num).toNumber();
-        break;
-      default:
-        res = 0;
-        break;
-    }
-    return res;
-  }, first);
+  const total = stringCalculator(equation);
 
   res.statusCode = 201;
   res.json({

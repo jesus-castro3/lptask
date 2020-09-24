@@ -6,7 +6,6 @@ const handler = nc()
   .post(async (req, res) => {
     const prisma = new PrismaClient();
       const { user } = JSON.parse(req.body);
-      console.log(user);
       try {
         const result = await prisma.users.create({
           data: {
