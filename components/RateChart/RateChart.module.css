@@ -1,0 +1,44 @@
+.container {
+  width: 100%;
+  font-size: 2rem;
+  background-color: var(--lp-blue);
+  letter-spacing: 0.1rem;
+  color: var(--lp-white);
+}
+
+.container > h2 {
+  margin: 0;
+  display: flex;
+  -moz-box-pack: justify;
+  justify-content: space-between;
+  font-size: 2rem;
+  background-color: darkblue;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 2rem;
+}
+
+.container ul, .container li {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.container li {
+  display: flex;
+  padding: 1.45rem;
+  justify-content: space-between;
+  border-bottom: 1px solid darkblue;
+}
+
+@media screen and (max-width: 50rem) {
+  .container {
+    font-size: 1.2rem;
+  }
+  .container h2{
+    font-size: 1.4rem;
+  }
+  .container li {
+    padding: .5rem;
+  }
+}

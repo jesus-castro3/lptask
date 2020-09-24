@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {parseCookies} from 'nookies';
 import BalanceBanner from '../../components/BalanceBanner/BalanceBanner';
@@ -6,6 +6,7 @@ import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad
 
 import styles from './calculator.module.css';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
+import RateChart from '../../components/RateChart/RateChart';
 
 const OPERATIONS = {
   '+': 'add',
@@ -16,17 +17,21 @@ const OPERATIONS = {
   'root': 'root'
 };
 
-function CalculatorPage({ userData }) {
+function CalculatorPage({ user, rates }) {
   const router = useRouter();
-  if(!userData) {
-    router.push('/');
-  }
-  const [balance, setBalance] = useState(userData.balance);
+  if(!user) return <h1>Loading</h1>
+
+  const [balance, setBalance] = useState(user.balance);
   // visual purpose only
   const [windowList, setWindowList] = useState([]);
   // structured list will be sent to the api
   const [disableOperationPad, setDisableOperationPad] = useState(true);
 
+  useEffect(() => {
+    if (!user) {
+      router.push('/')
+    }
+  }, [user]);
   const handleNumPress = (val) => {
     setDisableOperationPad(false);
     // we only allow one decimal(.) aggregation
@@ -84,7 +89,7 @@ function CalculatorPage({ userData }) {
 
   async function handleRandomPress() {
     let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/random`, {
-      method: 'GET',
+      method: 'get',
     });
     let {
       balance,
@@ -94,34 +99,58 @@ function CalculatorPage({ userData }) {
     setWindowList([total]);
   }
 
+  async function closeUserSession() {
+    let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.userId}`, {
+      method: 'delete'
+    });
+    await userResponse.text().then( res => {
+      router.push('/');
+    });
+  }
+
   return(
-    <main className={styles.mainContainer}>
-      <BalanceBanner
-        balance={balance}
-      />
-      <CalculatorWindow windowList={windowList}/>
-      <CalculatorKeypad
-        disableOperationPad={disableOperationPad}
-        onNumPress={(val) => handleNumPress(val)}
-        onRandomPress={handleRandomPress}
-        onDelete={handleDelete}
-        onOperationPress={(val) => handleOperationPress(val)}
-        onSubmit={onSubmit}
-      />
+    <main className={styles.container}>
+      <div className={styles.logout}>
+        <a onClick={closeUserSession}>Close Session</a>
+      </div>
+      <div className={styles.mainContainer}>
+        <div className={styles.leftContainer}>
+          <BalanceBanner
+            balance={balance}
+          />
+          <CalculatorWindow windowList={windowList}/>
+          <CalculatorKeypad
+            disableOperationPad={disableOperationPad}
+            onNumPress={(val) => handleNumPress(val)}
+            onRandomPress={handleRandomPress}
+            onDelete={handleDelete}
+            onOperationPress={(val) => handleOperationPress(val)}
+            onSubmit={onSubmit}
+          />
+        </div>
+        <RateChart rates={rates}/>
+      </div>
     </main>
   );
 }
 
 export async function getServerSideProps(ctx) {
   const cookies = parseCookies(ctx);
+  console.log(ctx.setHeader);
   if(cookies.userId) {
-    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${cookies.userId}`);
-    let userData = await response.json();
+    let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${cookies.userId}`);
+    let ratesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rates`);
+    let { rates } = await ratesResponse.json();
+    let user = await userResponse.json();
     return {
       props: {
-        userData
+        user,
+        rates
       }
     }
+  } else {  
+    ctx.res.statusCode = 302
+    ctx.res.setHeader('Location', `/`) // Replace <link> with your url link
   }
   return {
     props: {}

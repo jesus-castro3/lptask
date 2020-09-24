@@ -6,6 +6,12 @@ async function seed() {
   await prisma.rate.create({
     data: {
       rate: 0.1,
+      type: operations.add
+    }
+  });
+  await prisma.rate.create({
+    data: {
+      rate: 0.1,
       type: operations.subtract
     }
   });
@@ -33,7 +39,7 @@ async function seed() {
       type: operations.random
     }
   });
-  console.log('Rate seed added');
+  console.log('Rate seed added::', operations);
 }
 
 seed()

@@ -57,6 +57,20 @@
   flex: 0 0 20%;
 }
 
+.numericPad button:hover,
+.operationsPad button:hover,
+.resultsPad button {
+  cursor: pointer;
+  background-color: var(--lp-grey);
+  transition: 500ms;
+  border: 1px solid var(--lp-dark-grey);
+}
+
+.operationsPad button:disabled {
+  cursor: default;
+  background-color: #efefef;
+}
+
 .resultsPad button:nth-child(4) {
   background-color: var(--lp-orange);
   color: var(--lp-white);

@@ -32,7 +32,7 @@ function CalculatorKeypad({
         )}
       </div>
       <div className={styles.resultsPad}>
-        <button onClick={onDelete}>Del</button>
+        <button onClick={onDelete}>CE</button>
         <button onClick={onRootPress}>Root</button>
         <button onClick={onRandomPress}>Random</button>
         <button onClick={onSubmit}>=</button>
