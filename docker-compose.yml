@@ -27,8 +27,10 @@ services:
       dockerfile: Dockerfile  
       args:
         - POSTGRES_URL=${POSTGRES_URL}
+        - ENVIROMENT=${ENVIROMENT}
     environment:
       POSTGRES_URL: ${POSTGRES_URL}
+      ENVIROMENT: ${ENVIROMENT}
     volumes:
       - ./:/app
       - /node_modules

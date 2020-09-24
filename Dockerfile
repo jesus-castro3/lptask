@@ -11,9 +11,9 @@ RUN npm install -g @prisma/client
 
 ARG POSTGRES_URL
 ENV POSTGRES_URL "$POSTGRES_URL"
+ARG ENVIROMENT
+ENV ENVIROMENT "$ENVIROMENT"
 
 RUN npm install
-# RUN npx prisma migrate save --experimental
-# RUN npx prisma migrate up --experimental
-# RUN prisma generate
-CMD ["sh","-c","npx prisma migrate save --experimental -c && npx prisma migrate up --experimental -c && prisma generate && node ./prisma/seed  && npm run local"]
+
+CMD ["sh","-c","npm run migrate && npm run seed & npm run ${ENVIROMENT}"]
