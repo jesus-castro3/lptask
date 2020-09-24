@@ -150,7 +150,7 @@ export async function getServerSideProps(ctx) {
     }
   } else {  
     ctx.res.statusCode = 302
-    ctx.res.setHeader('Location', `/`) // Replace <link> with your url link
+    ctx.res.setHeader('Location', `/`)
   }
   return {
     props: {}
