@@ -4,17 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisnext build",
-    "prebuild": "prisma migrate up --experimental -c && prisma migrate up --experimental -c prisma generate && node ./prisma/seed",
-    "docker": "docker-compose up",
-    "docker:build": "docker-compose build",
-    "docker:clean": "npm run clean:images && npm run clean:volumes",
-    "clean:images": "docker system prune -af",
-    "clean:volumes": "docker volume prune -f",
-    "docker:seed": "docker exec -it app node ./prisma/seed",
-    "migrate:save": "docker exec -it app prisma migrate save --experimental -c",
-    "migrate:up": "docker exec -it app prisma migrate up --experimental -c",
-    "migrate": "npm run migrate:save && npm run migrate:up"
+    "build": "next build",
+    "prebuild": "prisma migrate up --experimental -c && prisma migrate up --experimental -c && prisma generate && node ./prisma/seed"
   },
   "dependencies": {
     "@prisma/client": "^2.7.1",
