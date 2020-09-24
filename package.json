@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "start": "next start -p $PORT",
     "build": "next build",
-    "prebuild": "npx prisma migrate up --experimental -c && npx prisma migrate up --experimental -c npx prisma generate && node ./prisma/seed",
     "docker": "docker-compose up",
     "docker:build": "docker-compose build",
     "docker:clean": "npm run clean:images && npm run clean:volumes",
