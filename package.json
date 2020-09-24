@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "local": "next dev",
-    "localbuild": "next build",
+    "next:local": "next dev",
+    "next:build": "next build",
     "start": "docker-compose up",
     "build": "docker-compose build",
     "clean": "npm run clean:images && npm run clean:volumes",
