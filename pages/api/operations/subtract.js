@@ -1,21 +1,27 @@
 import Decimal from 'decimal.js';
-import { SUBTRACT } from '../../../contants';
+import nc from 'next-connect';
 
+import { SUBTRACT } from '../../../constants';
+import stringCalculator from '../../../services/stringCalculator';
 import updateBalance from '../../../services/updateBalance';
 
-export default (req, res) => {
-  if (req.method === 'POST') {
-    return handlePOST(req, res);
-  }
-  return res.send(`${req.method} Method not supported`);
-}
+const handler = nc()
+  .post(async (req, res) => {
+    const { cookies } = req;
+    try {
+      const balance = await updateBalance(cookies.userId, SUBTRACT);
+      const { equation } = JSON.parse(req.body);
+      const total = stringCalculator(equation);
+    
+      res.statusCode = 201;
+      res.json({ total, balance });
+    } catch(e) {
+      res.statusCode = 500;
+      res.send('Unable to complete subtract operation', e);
+      res.json({
+        error: true
+      });
+    }
+  });
 
-async function handlePOST(req, res) {
-  const { cookies } = req;
-  const balance = await updateBalance(cookies.userId, SUBTRACT);
-  const { numbers } = JSON.parse(req.body);
-  const first = numbers.shift();
-  const total = numbers.reduce((accum, num) => Decimal(accum).sub(num).toNumber(), first);
-  res.statusCode = 201;
-  res.json({ total, balance });
-}
+export default handler;

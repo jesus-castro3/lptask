@@ -10,8 +10,7 @@ function CalculatorKeypad({
   onDelete,
   onRandomPress,
   onRootPress,
-  onSubmit,
-  disableOperationPad
+  onSubmit
 }) {
   return(
     <section className={styles.container}>
@@ -25,7 +24,7 @@ function CalculatorKeypad({
       </div>
       <div className={styles.operationsPad}>
         {OPERATIONS_KEYPAD.map((num) => (
-          <button disabled={disableOperationPad} key={num} onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
+          <button key={num} onClick={(e) => onOperationPress(e.target.textContent)} className={styles.numericPadItem}>
             {num}
           </button>
           )

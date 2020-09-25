@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import {parseCookies} from 'nookies';
+import { parseCookies } from 'nookies';
+
+import {
+  submitNumRequest,
+  submitRandomStringRequest,
+  endUserSession
+} from '../../services/clientApi';
 import BalanceBanner from '../../components/BalanceBanner/BalanceBanner';
 import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad';
-
-import styles from './calculator.module.css';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
 import RateChart from '../../components/RateChart/RateChart';
+import { OPERATIONS } from '../../constants';
 
-const OPERATIONS = {
-  '+': 'add',
-  '-': 'subtract',
-  '*': 'times',
-  '/': 'divide',
-  'random': 'random',
-  'root': 'root'
-};
+import styles from './calculator.module.css';
 
 function CalculatorPage({ user, rates }) {
   const router = useRouter();
@@ -23,14 +21,12 @@ function CalculatorPage({ user, rates }) {
   if(!user) return <h1>Loading</h1>
 
   const [balance, setBalance] = useState(user.balance);
-  // visual purpose only
-  const [windowList, setWindowList] = useState('');
-  // structured list will be sent to the api
-  const [disableOperationPad, setDisableOperationPad] = useState(false);
+  // calculator string operation 
+  const [numberOp, setNumberOperation] = useState('');
 
   useEffect(() => {
     if (!user) {
-      router.push('/')
+      router.push('/');
     }
   }, [user]);
 
@@ -38,10 +34,10 @@ function CalculatorPage({ user, rates }) {
     // we can only include one decimal place in each integer operation
     if(val === '.') {
         // convert to array and flip it so we start from the last input
-        if(!windowList.length) {
-          return setWindowList(val);
+        if(!numberOp.length) {
+          return setNumberOperation(val);
         }
-        const windowListArray = windowList.split('').reverse();
+        const windowListArray = numberOp.split('').reverse();
         // good'ol for loop
         let addToList = false;
         for (let i = 0; i < windowListArray.length; i++) {
@@ -56,103 +52,90 @@ function CalculatorPage({ user, rates }) {
           }
         }
         if(addToList) {
-          setWindowList(windowList + val);
+          setNumberOperation(numberOp + val);
         }
 
     } else {
-      const newWindowList = windowList + val;
-      setWindowList(newWindowList);
+      const newNumOperation = numberOp + val;
+      setNumberOperation(newNumOperation);
     }
   };
 
   const handleOperationPress = (val) => {
-    //cant have two operations next to eachoter
-    const newWindowList = windowList + val;
-    if(windowList.length && !isNaN(windowList[windowList.length -1])) {
-      setWindowList(newWindowList);
-    } else if (!windowList.length && val === '-') {
-      setWindowList(val);
-    } else if(!windowList.length) {
-      setWindowList('0' + val);
+    // cant have two operations next to eachother
+    const newNumOperation = numberOp + val;
+    if(numberOp.length && !isNaN(numberOp[numberOp.length -1])) {
+      setNumberOperation(newNumOperation);
+    } else if (!numberOp.length && val === '-') {
+      setNumberOperation(val);
+    } else if(!numberOp.length) {
+      setNumberOperation('0' + val);
     }
   };
 
   const handleDelete = () => {
-    if(windowList.length) {
-      const newWindowList = windowList.slice(0, windowList.length - 1);
-      setWindowList(newWindowList);
+    if(numberOp.length) {
+      const newNumOperation = numberOp.slice(0, numberOp.length - 1);
+      setNumberOperation(newNumOperation);
     }
   }
 
-  async function onSubmit() {
-    const numbers = windowList.split(/\*|\+|\/|\-/);
-    const operations = windowList.replace(/[0-9]|e|\./g, '').split('');
-    
+  /**
+   * Updates local state after every API request
+   */
+  const updateCalculatorData = (total, balance) => {
+    setNumberOperation(total + '');
+    setBalance(balance);
+  }
+
+  const onSubmit = async () => {
+    const numbers = numberOp.split(/\*|\+|\/|\-/);
+    const operations = numberOp.replace(/[0-9]|e|\./g, '').split('');
+    // avoid submitting single integer operations e.g -2, 34, 10
     if (numbers.length < 2) return;
 
     const [first] = operations;
-    const isSameOperation = operations.every(o => first === o);
+    const sequentialOperation = operations.every(o => first === o);
     
-    if(isSameOperation) {
+    if(sequentialOperation) {
+      // handles calculation for sequential operations e.g: 5+5+100+34, 4-3-3-3
       const [type] = operations;
-      let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${OPERATIONS[type]}`, {
-        method: 'post',
-        body: JSON.stringify({ numbers })
-      });
-      let { balance, total } = await response.json();
-      setWindowList(total + '');
-      setBalance(balance);
+      const { total, balance } = await submitNumRequest(numberOp, OPERATIONS[type]);
+      updateCalculatorData(total, balance);      
     } else {
-      // handle calculation with different operations e.g : 5+545/5545*44323
-      let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations`, {
-        method: 'post',
-        body: JSON.stringify({
-          equation: windowList
-        })
-      });
-      let {
-        balance,
-        total
-      } = await response.json();
-      setWindowList(total + '');
-      setBalance(balance);
+      // handles calculation with different operations e.g: 5+545/5545*44323
+      const { total, balance } = await submitNumRequest(numberOp);
+      updateCalculatorData(total, balance);
     }
   };
 
-  async function handleRandomPress() {
-    let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/random`, {
-      method: 'get',
-    });
-    let {
-      balance,
-      total
-    } = await response.json();
-    setBalance(balance);
-    setWindowList([total]);
+  const handleRandomPress = async() => {
+    const { balance, total } = await submitRandomStringRequest();
+    updateCalculatorData(total, balance);
   }
 
-  async function closeUserSession() {
-    let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.userId}`, {
-      method: 'delete'
-    });
-    await userResponse.text().then( res => {
+  const handleEndSession = async () => {
+    const { error } = await endUserSession(user.userId);
+    if(error) { 
+      // handle errors here
+      console.log('Unable to close session')
+    } else {
       router.push('/');
-    });
+    }
   }
 
   return(
     <main className={styles.container}>
       <div className={styles.logout}>
-        <a onClick={closeUserSession}>Close Session</a>
+        <a onClick={handleEndSession}>End Session</a>
       </div>
       <div className={styles.mainContainer}>
         <div className={styles.leftContainer}>
           <BalanceBanner
             balance={balance}
           />
-          <CalculatorWindow windowList={windowList}/>
+          <CalculatorWindow numberOp={numberOp}/>
           <CalculatorKeypad
-            disableOperationPad={disableOperationPad}
             onNumPress={handleNumPress}
             onRandomPress={handleRandomPress}
             onDelete={handleDelete}

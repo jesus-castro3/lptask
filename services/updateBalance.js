@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js';
 import { PrismaClient } from "@prisma/client";
 
-// TODO: remove the fixed defaults, for testing purposes
+// @TODO: remove the fixed defaults, for testing purposes
 export default async function updateBalance(id, type){
   const prisma = new PrismaClient();
   const userId = Number(id);

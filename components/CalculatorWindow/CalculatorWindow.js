@@ -1,9 +1,9 @@
 import styles from './CalculatorWindow.module.css';
 
-function CalculatorWindow({ windowList }) {
+function CalculatorWindow({ numberOp }) {
   return(
     <div className={styles.container}>
-      <span>{windowList}</span>
+      <span>{numberOp}</span>
     </div>
   )
 }
