@@ -48,8 +48,8 @@ export const submitRootRequest = async (equation, type) => {
  * @param {String}
  * @return { error: Boolean }
  */
-export const endUserSession = async (user) => {
-  let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.userId}`, {
+export const endUserSession = async (id) => {
+  let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
     method: 'delete'
   });
   return await userResponse.text();
