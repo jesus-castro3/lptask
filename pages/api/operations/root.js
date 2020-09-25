@@ -3,30 +3,31 @@ import nc from 'next-connect';
 
 import { ROOT } from '../../../constants';
 import updateBalance from '../../../services/updateBalance';
+import stringCalculator from '../../../services/stringCalculator';
 
 const handler = nc()
   .post(async (req, res) => {
     const { cookies } = req;
     try {
       const balance = await updateBalance(cookies.userId, ROOT);
-      // @TODO: incorporate root into stringCalculator
+      // @TODO: incorporate root into stringCalculator or not? 
       const { equation } = JSON.parse(req.body);
-      const [first, second] = equation.split('root');
-      let total = 0;
-      // if we still have a remainder
-      // multiply it by root
-      if (second) {
-        total = Decimal(first).times(Decimal.sqrt(second)).toNumber();
-      } else {
-        total = Decimal.sqrt(first).toNumber();
-      }
+      // might be better to split by 'root'...might
+      const rootHowMany = equation.split('').filter(v => v === '√').length;
+      const equationsToSolve = equation.split('√').filter(v => v);
+      console.log('equationsToSolve::', equationsToSolve)
+      const remainder = (rootHowMany === equationsToSolve.length) ? 1 : equationsToSolve.shift();
+      const total = equationsToSolve
+        .map(val => Decimal.sqrt(stringCalculator(val)))
+        .reduce((accum, val) => new Decimal(accum).times(val).toNumber(), remainder)
+      
       res.statusCode = 201;
       res.json({ total, balance });
     } catch (e) {
       res.statusCode = 500;
-      res.send('Unable to complete operation root', e);
       res.json({
-        error: true
+        error: true,
+        errorMessage: e
       });
     }
   });

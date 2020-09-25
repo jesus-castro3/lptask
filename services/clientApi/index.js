@@ -23,9 +23,22 @@ export const submitNumRequest = async (equation, type = '') => {
  * e.g KKDKS-KSKSL-URUIO-KDJHS
  * @return { balance: String, total: String }
  */
-export const submitRandomStringRequest = async () => {
-  let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/random`, {
+export const submitRandomStringRequest = async (type) => {
+  let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${type}`, {
     method: 'get',
+  });
+  return await response.json();
+}
+
+/**
+ * Includes a root operation request √
+ * @param {String}
+ * @return { balance: String, total: String }
+ */
+export const submitRootRequest = async (equation, type) => {
+  let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${type}`, {
+    method: 'post',
+    body: JSON.stringify({ equation })
   });
   return await response.json();
 }
@@ -41,3 +54,5 @@ export const endUserSession = async (user) => {
   });
   return await userResponse.text();
 }
+
+

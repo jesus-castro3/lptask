@@ -16,9 +16,9 @@ const handler = nc()
       res.json({ total, balance });
     } catch(e) {
       res.statusCode = 500;
-      res.send('Unable to complete divide operation');
       res.json({
-        error: true
+        error: true,
+        errorMessage: e
       });
     }
   });
