@@ -13,6 +13,7 @@
   font-size: 2rem;
 }
 
+/* NUMERIC PAD */
 .numericPad {
   display: flex;
   flex-wrap: wrap;
@@ -27,6 +28,7 @@
   justify-content: center;
 }
 
+/* OPERATION PAD */
 .operationsPad {
   display: flex;
   flex-direction: column;
@@ -41,6 +43,12 @@
   justify-content: center;
 }
 
+.operationsPad button:disabled {
+  cursor: default;
+  background-color: #efefef;
+}
+
+/* RESULTS PAD  */
 .resultsPad {
   display: flex;
   flex-direction: column;
@@ -57,6 +65,23 @@
   flex: 0 0 20%;
 }
 
+.resultsPad button:last-child {
+  background-color: var(--lp-orange);
+  color: var(--lp-white);
+  font-weight: bolder;
+  flex: 0 0 40%;
+}
+
+.resultsPad button:hover {
+  transition: 0;
+  font-weight: 700;
+}
+
+.resultsPad button:last-child:hover {
+  background-color: var(--lp-dark-orange);
+}
+
+/* combined styles */
 .numericPad button:hover,
 .operationsPad button:hover,
 .resultsPad button {
@@ -64,16 +89,4 @@
   background-color: var(--lp-grey);
   transition: 500ms;
   border: 1px solid var(--lp-dark-grey);
-}
-
-.operationsPad button:disabled {
-  cursor: default;
-  background-color: #efefef;
-}
-
-.resultsPad button:nth-child(4) {
-  background-color: var(--lp-orange);
-  color: var(--lp-white);
-  font-weight: bolder;
-  flex: 0 0 40%;
 }

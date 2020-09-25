@@ -2,6 +2,7 @@
   /* global palette colors */
   --lp-green: #61CE70;
   --lp-orange: #FF9100;
+  --lp-dark-orange: #e68200;
   --lp-blue: #1A62FF;
   --lp-white: #F7FBFF;
   --lp-grey: #CAC0D8;
@@ -23,4 +24,11 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: none;
 }
