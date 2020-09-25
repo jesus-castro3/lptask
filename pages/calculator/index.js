@@ -125,7 +125,7 @@ function CalculatorPage({ user, rates }) {
     const numbers = numberOp.split(/\*|\+|\/|\-/);
     const operations = numberOp.replace(/[0-9]|e|\./g, '').split('');
     // avoid submitting single integer operations e.g -2, 34, 10
-    if (operations.length < 2) return;
+    if (numbers.length < 2) return;
 
     const [first] = operations;
     const sequentialOperation = operations.every(o => first === o);

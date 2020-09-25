@@ -8,6 +8,7 @@
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "docker": "docker-compose up",
+    "docker:stop": "docker-compose stop",
     "docker:build": "docker-compose build",
     "docker:clean": "npm run clean:images && npm run clean:volumes",
     "docker:seed": "docker exec -it app node ./prisma/seed",
