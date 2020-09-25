@@ -26,7 +26,8 @@ function CalculatorPage({ user, rates }) {
   const [numberOp, setNumberOperation] = useState('');
   // flag to wipe random string if a num operation follows it
   const [isRandomStringActive, setRandomStringActive] = useState(false);
-
+  // set rate type for banner animation
+  const [rateType, setRateType] = useState();
   // redirects to home if no user is in session
   useEffect(() => {
     if (!user) {
@@ -117,25 +118,29 @@ function CalculatorPage({ user, rates }) {
   const onSubmit = async () => {
     if (numberOp.indexOf('√') !== -1) {
       const { total, balance } = await submitRootRequest(numberOp, OPERATIONS.root);
-      return updateCalculatorData(total, balance);
+      updateCalculatorData(total, balance);
+      setRateType(OPERATIONS.root);
+      return;
     }
     const numbers = numberOp.split(/\*|\+|\/|\-/);
     const operations = numberOp.replace(/[0-9]|e|\./g, '').split('');
     // avoid submitting single integer operations e.g -2, 34, 10
-    if (numbers.length < 2) return;
+    if (operations.length < 2) return;
 
     const [first] = operations;
     const sequentialOperation = operations.every(o => first === o);
     
 
     if(sequentialOperation) {
-      // handles calculation for sequential operations e.g: 5+5+100+34, 4-3-3-3
+      // handles calculation for sequential operations e.g: 5+5+10+34, 4-3-3-3
       const [type] = operations;
       const { total, balance } = await submitNumRequest(numberOp, OPERATIONS[type]);
+      setRateType(OPERATIONS[type]);
       updateCalculatorData(total, balance);      
     } else {
       // handles calculation with different operations e.g: 5+545/5545*44323
       const { total, balance } = await submitNumRequest(numberOp);
+      setRateType(OPERATIONS.random);
       updateCalculatorData(total, balance);
     }
   };
@@ -146,6 +151,7 @@ function CalculatorPage({ user, rates }) {
   const handleRandomPress = async() => {
     const { balance, total } = await submitRandomStringRequest(OPERATIONS.random);
     setRandomStringActive(true);
+    setRateType(OPERATIONS.random);
     updateCalculatorData(total, balance);
   }
 
@@ -187,6 +193,8 @@ function CalculatorPage({ user, rates }) {
         <div className={styles.leftContainer}>
           <BalanceBanner
             balance={balance}
+            rates={rates}
+            rateType={rateType}
           />
           <CalculatorWindow numberOp={numberOp}/>
           <CalculatorKeypad

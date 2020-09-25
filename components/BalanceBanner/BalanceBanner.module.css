@@ -7,13 +7,33 @@
   color: #ffffff;
   font-weight: bold;
   padding: 2rem;
+  position: relative;
+}
+.rate {
+  position: absolute;
+  z-index: -100;
+  right: 0;
+  background: green;
+  padding: 1rem 2rem 1rem;
+  height: 4rem;
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  font-size: 1.8rem;
+  box-shadow: 3px 0px 5px black;
 }
 
-.cost {
-
+.rateAnimation {
+  animation: peek 1.5s infinite;
 }
 
-.balance {
-  
+@keyframes peek {
+  0% {top: 0px;}
+  20% {top: -4.3rem} /* ignored */
+  40% {top: -4.3rem; height: 5rem} /* ignored */
+  50% {top: -4.3rem; height: 5rem} /* ignored */
+  60% {top: -4.3rem; height: 5rem} /* ignored */
+  70% {top: -4.3rem; height: 5rem} /* ignored */
+  80% {top: -4.3rem; height: 5rem} /* ignored */
+  100% {top: 0px;}
 }
 

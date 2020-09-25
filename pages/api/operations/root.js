@@ -15,7 +15,6 @@ const handler = nc()
       // might be better to split by 'root'...might
       const rootHowMany = equation.split('').filter(v => v === '√').length;
       const equationsToSolve = equation.split('√').filter(v => v);
-      console.log('equationsToSolve::', equationsToSolve)
       const remainder = (rootHowMany === equationsToSolve.length) ? 1 : equationsToSolve.shift();
       const total = equationsToSolve
         .map(val => Decimal.sqrt(stringCalculator(val)))

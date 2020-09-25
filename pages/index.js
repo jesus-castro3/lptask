@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
+  const userInputRef = useRef(null);
   const [user, setUser] = useState('');
   const [disableForm, setDisableForm] = useState(true);
   const router = useRouter();
   
+  useEffect(() => {
+    if(userInputRef) {
+      userInputRef.current.focus();
+    }
+  }, 
+  [userInputRef])
+
   const checkAlphanumeric = new RegExp(/^[a-zA-Z0-9_]*$/);
   const userMaxConstrain = s => s.length <= 15
   const userMinConstrain = s => s.length >= 5
@@ -49,7 +57,7 @@ export default function Home() {
       <div className={styles.lpLinearGradient}></div>
       <h4>create a temp user to start</h4>
       <form onSubmit={handleSubmit}>
-        <input value={user} onChange={handleUserInput}/>
+        <input value={user} onChange={handleUserInput} ref={userInputRef}/>
         <button type="submit" disabled={disableForm}>Create User</button>
       </form>
     </div>
