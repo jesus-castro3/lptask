@@ -1,16 +1,7 @@
 import Decimal from 'decimal.js';
 
-const removePlus = (arrayWithPlus) => {
-  let newArray = [...arrayWithPlus]
-  while (newArray.indexOf('+') !== -1) {
-    let indexPlus = newArray.indexOf('+')
-    newArray.splice(indexPlus, 1)
-  }
-
-  return newArray
-}
-
 const sumArrayItems = (operationArrayMultiDiv) => {
+
   let newArray = [...operationArrayMultiDiv]
   if (newArray.length > 1) {
     if (newArray.indexOf('+') !== -1) {
@@ -62,6 +53,7 @@ const dashToDashOne = (operationArray) => {
 }
 
 const fillOperationArray = (array1, array2) => {
+
   let firstArray = [...array1];
   let secondArray = [...array2];
   let resultArray = [];
@@ -103,14 +95,16 @@ const generateNumbersArray = (inputString) => {
 const generateOperatorsArray = (inputString) => {
 
   let operators = inputString.match(/[*/+-]/g);
-  if (operators) {
-    return operators;
-  } else {
-    return [];
-  }
+  return operators || [];
 }
 
-const stringCalculator = (inputString, sequential) => {
+/**
+ * Receives an input string, the calculator wont validate the correct formating of an equation
+ * a correct equation needs to be provided in work to work properly
+ * @param {String} inputString
+ * @returns {Number}
+ */
+const stringCalculator = (inputString) => {
 
   const opArray = generateOperatorsArray(inputString);
 

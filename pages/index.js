@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
 
@@ -62,6 +63,17 @@ export default function Home() {
       </form>
     </div>
   )
+}
+
+export async function getServerSideProps(ctx) {
+  const cookies = parseCookies(ctx);
+  if(cookies.userId) {
+    ctx.res.statusCode = 302;
+    ctx.res.setHeader('Location', '/calculator');
+  }
+  return {
+    props: {}
+  }
 }
 
 

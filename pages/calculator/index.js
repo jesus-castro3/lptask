@@ -226,8 +226,8 @@ export async function getServerSideProps(ctx) {
       }
     }
   } else {  
-    ctx.res.statusCode = 302
-    ctx.res.setHeader('Location', `/`)
+    ctx.res.statusCode = 302;
+    ctx.res.setHeader('Location', '/');
   }
   return {
     props: {}
