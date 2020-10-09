@@ -23,7 +23,10 @@ function Home() {
       <h4>Start by login in with one of these providers</h4>
       <ul className={styles.loginContainer}>
         <li>
-          <button onClick={() => signIn('github')}>Sign in using Github</button>
+          <button onClick={() => signIn('github')}>Sign in with Github <img src="/assets/github.png" alt=""/></button>
+        </li>  
+        <li>
+          <button onClick={() => signIn('google')}>Sign in with Google <img src="/assets/google.jpg" alt=""/></button>
         </li>  
       </ul> 
       </div>
