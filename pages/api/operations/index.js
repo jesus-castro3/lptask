@@ -1,5 +1,5 @@
-import Decimal from 'decimal.js';
 import nc from 'next-connect';
+import { getSession } from 'next-auth/client';
 
 import { ADD } from '../../../constants';
 import updateBalance from '../../../services/updateBalance';
@@ -8,9 +8,9 @@ import stringCalculator from '../../../services/stringCalculator';
 const handler = nc()
   .post(async (req, res) => {
     try {
-      const { cookies } = req;
+      const { user } = await getSession({ req });
       const { equation } = JSON.parse(req.body);
-      const balance = await updateBalance(cookies.userId, ADD);
+      const balance = await updateBalance(user.id, ADD);
       const total = stringCalculator(equation);
   
       res.statusCode = 201;

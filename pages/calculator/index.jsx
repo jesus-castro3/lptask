@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { parseCookies } from 'nookies';
+import { PrismaClient } from '@prisma/client';
+import { getSession, useSession, signOut } from 'next-auth/client'
 
 import {
   submitNumRequest,
@@ -16,24 +17,33 @@ import { OPERATIONS } from '../../constants';
 
 import styles from './calculator.module.css';
 
-function CalculatorPage({ user, rates }) {
+function CalculatorPage({ balance, rates }) {
   const router = useRouter();
-
-  if(!user) return <h1>Loading</h1>
+  const [ session, loading ] = useSession();
   // total balance amount due will be set here 
-  const [balance, setBalance] = useState(user.balance);
+  const [currentBalance, setBalance] = useState(balance);
   // calculator string operation 
   const [numberOp, setNumberOperation] = useState('');
   // flag to wipe random string if a num operation follows it
   const [isRandomStringActive, setRandomStringActive] = useState(false);
   // set rate type for banner animation
   const [rateType, setRateType] = useState();
+
   // redirects to home if no user is in session
   useEffect(() => {
-    if (!user) {
+    if (!session) {
       router.push('/');
     }
-  }, [user]);
+  }, [session]);
+
+  if (loading) return <h1>Loading</h1>
+  if (!session) {
+    // redirect back to homepage when we lose session or logout
+    router.push('/');
+    return;
+  }
+
+  const { user } = session;
 
   /** Hanldles every digit press [0-9] and .
    * @param {String}
@@ -159,7 +169,7 @@ function CalculatorPage({ user, rates }) {
    * Ends user session on click 
    */
   const handleEndSession = async () => {
-    const { error } = await endUserSession(user.userId);
+    const { error } = await endUserSession(user.id);
     if(error) { 
       // handle errors here
       console.log('Unable to close session')
@@ -187,12 +197,12 @@ function CalculatorPage({ user, rates }) {
   return(
     <main className={styles.container}>
       <div className={styles.logout}>
-        <a onClick={handleEndSession}>End Session</a>
+        <a onClick={signOut}>Log out</a>
       </div>
       <div className={styles.mainContainer}>
         <div className={styles.leftContainer}>
           <BalanceBanner
-            balance={balance}
+            balance={currentBalance}
             rates={rates}
             rateType={rateType}
           />
@@ -213,24 +223,26 @@ function CalculatorPage({ user, rates }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const cookies = parseCookies(ctx);
-  if (cookies.userId) {
-    let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${cookies.userId}`);
-    let ratesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rates`);
-    let { rates } = await ratesResponse.json();
-    let user = await userResponse.json();
+  const session = await getSession(ctx);
+  const prisma = new PrismaClient();
+  if (session) {
+    const rates = await prisma.rate.findMany();
+    const { balance } = await prisma.balance.findOne({
+      select: { balance: true },
+      where: { userId: session.user.id }
+    });
     return {
       props: {
-        user,
-        rates
+        rates,
+        balance
       }
     }
-  } else {  
+  } else {
     ctx.res.statusCode = 302;
     ctx.res.setHeader('Location', '/');
-  }
-  return {
-    props: {}
+    return {
+      props: {}
+    }
   }
 }
 

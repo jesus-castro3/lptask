@@ -142,16 +142,18 @@
   border-style: none;
 }
 
-.container button {
+.container .submit {
   background-color: var(--lp-green);
   color: var(--lp-white);
   font-weight: bold;
   border-top-right-radius: 0.3rem;
   border-bottom-right-radius: 0.3rem;
+  width: 100%;
 }
 
-.container button:disabled {
-  background-color: black;
+.container .submit:disabled {
+  background-color: var(--lp-dark-grey);
+  cursor: none;
 }
 
 .lpLinearGradient {
@@ -160,4 +162,23 @@
   width: 30%;
   background: rgb(97, 206, 112);
   background: linear-gradient(90deg, rgba(97, 206, 112, 1) 0%, rgba(255, 145, 0, 1) 35%, rgba(26, 98, 255, 1) 100%);
+}
+
+.loginContainer {
+  margin: 0 auto;
+}
+
+.loginContainer ul {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  margin-top: 4rem;
+  align-items: center;
+  width: 30rem;
+  background: var(--lp-grey);
+}
+
+.loginContainer li > button {
+  border: 1px solid var(--lp-dark-grey);
+  padding: 1rem;
 }

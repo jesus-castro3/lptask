@@ -1,15 +1,18 @@
 import Decimal from 'decimal.js';
 import nc from 'next-connect';
+import { getSession } from 'next-auth/client';
+import bodyParser from 'body-parser';
 
 import { ROOT } from '../../../constants';
 import updateBalance from '../../../services/updateBalance';
 import stringCalculator from '../../../services/stringCalculator';
 
 const handler = nc()
+  .use(bodyParser)
   .post(async (req, res) => {
-    const { cookies } = req;
     try {
-      const balance = await updateBalance(cookies.userId, ROOT);
+      const { user } = await getSession({ req });
+      const balance = await updateBalance(user.id, ROOT);
       // @TODO: incorporate root into stringCalculator or not? 
       const { equation } = JSON.parse(req.body);
       // might be better to split by 'root'...might

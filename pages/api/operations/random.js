@@ -1,13 +1,14 @@
 import nc from 'next-connect';
+import { getSession } from 'next-auth/client';
 
 import { RANDOM } from '../../../constants';
 import updateBalance from '../../../services/updateBalance';
 
 const handler = nc()
   .get(async (req, res) => {
-    const { cookies } = req;
     try {
-      const balance = await updateBalance(cookies.userId, RANDOM);
+      const { user } = await getSession({ req });
+      const balance = await updateBalance(user.id, RANDOM);
       //@TODO: integrate random string into stringCalculator
       let randomString = '';
       // we generate a 24 char string
@@ -26,8 +27,7 @@ const handler = nc()
       });
     } catch (e) {
       res.statusCode = 500;
-      res.send('Ooops something happened');
-      res.json({ error: true });
+      res.json({ error: true, total: 'Error', balance: 0 });
     } 
   });
 

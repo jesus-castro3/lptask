@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styles from './BalanceBanner.module.css';
-import Decimal from 'decimal.js';
 
 function BalanceBanner({ balance, rates, rateType }) {
   const formatedBalance = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(balance);

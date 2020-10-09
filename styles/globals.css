@@ -26,9 +26,15 @@ a {
   box-sizing: border-box;
 }
 
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 input:focus,
 textarea:focus,
 select:focus,
 button:focus {
   outline: none;
+  cursor: pointer;
 }

@@ -7,7 +7,7 @@ const handler = nc()
     const prisma = new PrismaClient();
       const { user } = JSON.parse(req.body);
       try {
-        const result = await prisma.users.create({
+        const result = await prisma.user.create({
           data: {
             user,
             balance: {

@@ -4,6 +4,9 @@
   background-color: var(--lp-blue);
   letter-spacing: 0.1rem;
   color: var(--lp-white);
+  background-color: linear;
+  background: rgb(97, 206, 112);
+  background: linear-gradient(180deg, rgb(109, 111, 233) 0%, rgb(84, 85, 179) 35%, rgb(55, 56, 119) 100%);
 }
 
 .container > h2 {
@@ -12,7 +15,6 @@
   -moz-box-pack: justify;
   justify-content: space-between;
   font-size: 2rem;
-  background-color: darkblue;
   color: #ffffff;
   font-weight: bold;
   padding: 2rem;

@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["darwin", "debian-openssl-1.1.x"]
 }
 
@@ -8,25 +8,78 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
+model Account {
+  id                 Int       @default(autoincrement()) @id
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             Int       @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           Int      @default(autoincrement()) @id
+  userId       Int      @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+model User {
+  id            Int       @default(autoincrement()) @id
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model VerificationRequest {
+  id         Int      @default(autoincrement()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
+}
+
 model Balance {
   id        Int       @default(autoincrement()) @id
-  balance   Float?
-  userId    Int       @default(autoincrement()) @unique
-  createdAt DateTime? @default(now())
-  author    Users     @relation(fields: [userId], references: [id])
+  balance   Float?    @default(0)
+  createdAt DateTime? @default(now()) @map(name: "created_at")
+  author    User     @relation(fields: [userId], references: [id])
+  userId    Int     @default(dbgenerated()) @map(name: "user_id") @unique
+
+  @@map(name: "balance")
 }
 
 model Rate {
   id   Int        @default(autoincrement()) @id
   rate Float
   type operations @unique
-}
 
-model Users {
-  id        Int      @default(autoincrement()) @id
-  user      String
-  createdAt DateTime @default(now())
-  balance   Balance?
+  @@map(name: "rate")
+
 }
 
 enum operations {
