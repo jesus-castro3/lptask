@@ -163,35 +163,3 @@
   background: rgb(97, 206, 112);
   background: linear-gradient(90deg, rgba(97, 206, 112, 1) 0%, rgba(255, 145, 0, 1) 35%, rgba(26, 98, 255, 1) 100%);
 }
-
-.loginContainer {
-  margin: 0 auto;
-}
-
-.loginContainer button {
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  margin: 1rem;
-}
-
-.loginContainer img {
-  width: 2rem;
-  margin-left: 1rem;
-}
-
-.loginContainer ul {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  margin-top: 4rem;
-  align-items: center;
-  width: 30rem;
-  background: var(--lp-grey);
-  box-shadow: 0 0.5rem .8rem #838383;
-}
-
-.loginContainer li > button {
-  border: 1px solid var(--lp-dark-grey);
-  padding: 1rem;
-}

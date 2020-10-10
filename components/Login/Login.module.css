@@ -1,0 +1,39 @@
+.loginContainer {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.2rem .5rem #838383;
+  border: none;
+}
+
+.loginContainer legend {
+  background-color: var(--lp-black);
+  color: var(--lp-white);
+  padding: 1rem;
+  letter-spacing: 0.1rem;
+}
+
+.loginContainer ul {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.loginContainer button {
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+  border-radius: 0.3rem;
+}
+
+.loginContainer img {
+  width: 2rem;
+  margin-left: 1rem;
+}
+
+.loginContainer li>button {
+  border: 1px solid var(--lp-dark-grey);
+  padding: 1rem;
+}

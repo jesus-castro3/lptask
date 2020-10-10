@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
+import Login from '../components/Login/Login';
 
 function Home() {
   const router = useRouter();
@@ -16,21 +17,11 @@ function Home() {
   if(loading || session) return null;
   
   return (
-    <div className={styles.container}>
+    <main className={styles.container}>
       <h1>LoanPro Calculator</h1>
       <span className={styles.lpLinearGradient}></span>
-      <div className={styles.loginContainer}>
-      <h4>Start by login in with one of these providers</h4>
-      <ul className={styles.loginContainer}>
-        <li>
-          <button onClick={() => signIn('github')}>Sign in with Github <img src="/assets/github.png" alt=""/></button>
-        </li>  
-        <li>
-          <button onClick={() => signIn('google')}>Sign in with Google <img src="/assets/google.jpg" alt=""/></button>
-        </li>  
-      </ul> 
-      </div>
-    </div>
+      <Login/>
+    </main>
   )
 }
 

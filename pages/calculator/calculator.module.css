@@ -8,27 +8,6 @@
   letter-spacing: 0.1rem;
 }
 
-.logout {
-  display: flex;
-  background-color: var(--lp-grey);
-  color: black;
-  width: 13rem;
-  position: absolute;
-  right: 0;
-  top: -4.4rem;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 1rem;
-  z-index: -10;
-  border: 1px solid var(--lp-dark-grey);
-}
-.logout:hover {
-  transition: 0;
-  font-weight: 700;
-}
-
 .mainContainer {
   box-shadow: 0 0.5rem .8rem #838383;
   display: flex;

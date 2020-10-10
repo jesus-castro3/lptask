@@ -1,0 +1,17 @@
+.logout {
+  width: 9rem;
+  position: absolute;
+  right: 0;
+  top: -3.8rem;
+  z-index: -10;
+}
+
+.logout button {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--lp-grey);
+  background-color: var(--lp-black);
+  color: var(--lp-white);
+  font-size: 1.6rem;
+  font-weight: bold;
+}

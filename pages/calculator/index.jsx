@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { PrismaClient } from '@prisma/client';
-import { getSession, useSession, signOut } from 'next-auth/client'
+import { getSession, useSession } from 'next-auth/client'
 
 import {
   submitNumRequest,
   submitRootRequest,
   submitRandomStringRequest,
-  endUserSession
 } from '../../services/clientApi';
+import Logout from '../../components/Logout/Logout';
 import BalanceBanner from '../../components/BalanceBanner/BalanceBanner';
 import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
@@ -45,7 +45,7 @@ function CalculatorPage({ balance, rates }) {
 
   const { user } = session;
 
-  /** Hanldles every digit press [0-9] and .
+  /** Handles every digit press [0-9] and .
    * @param {String}
    */
   const handleNumPress = (val) => {
@@ -165,19 +165,6 @@ function CalculatorPage({ balance, rates }) {
     updateCalculatorData(total, balance);
   }
 
-  /** 
-   * Ends user session on click 
-   */
-  const handleEndSession = async () => {
-    const { error } = await endUserSession(user.id);
-    if(error) { 
-      // handle errors here
-      console.log('Unable to close session')
-    } else {
-      router.push('/');
-    }
-  }
-
  /** 
   * Square Root handler
   * TODO: handle root operation with the rest, isolated for now
@@ -196,9 +183,7 @@ function CalculatorPage({ balance, rates }) {
 
   return(
     <main className={styles.container}>
-      <div className={styles.logout}>
-        <a onClick={signOut}>Log out</a>
-      </div>
+      <Logout/>
       <div className={styles.mainContainer}>
         <div className={styles.leftContainer}>
           <BalanceBanner
