@@ -7,7 +7,6 @@ export default async function updateBalance(req, res, next) {
   const prisma = new PrismaClient();
   const { type } = req.body;
   const { user } =  await getSession({ req });
-  console.log(type);
   if(!OPERATIONS_ENUM[type]) {
     res.json({
       error: true,

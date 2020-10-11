@@ -10,7 +10,8 @@ function CalculatorKeypad({
   onDelete,
   onRandomPress,
   onRootPress,
-  onSubmit
+  onSubmit,
+  submitDisabled
 }) {
   return(
     <section className={styles.container}>
@@ -34,7 +35,7 @@ function CalculatorKeypad({
         <button onClick={onDelete}>CE</button>
         <button onClick={onRootPress}>Root</button>
         <button onClick={onRandomPress}>Random</button>
-        <button onClick={onSubmit}>=</button>
+        <button onClick={onSubmit} disabled={submitDisabled}>=</button>
       </div>
     </section>
   )

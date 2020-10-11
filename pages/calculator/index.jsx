@@ -28,6 +28,8 @@ function CalculatorPage({ balance, rates }) {
   const [isRandomStringActive, setRandomStringActive] = useState(false);
   // set rate type for banner animation
   const [rateType, setRateType] = useState();
+  // disable submit button
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   // redirects to home if no user is in session
   useEffect(() => {
@@ -50,6 +52,7 @@ function CalculatorPage({ balance, rates }) {
    */
   const handleNumPress = (val) => {
     if(isRandomStringActive) {
+      setSubmitDisabled(false);
       setNumberOperation(val);
       setRandomStringActive(false);
       return;
@@ -90,6 +93,7 @@ function CalculatorPage({ balance, rates }) {
   const handleOperationPress = (val) => {
     const newNumOperation = isRandomStringActive ? val : numberOp + val;
     if(isRandomStringActive) {
+      setSubmitDisabled(false);
       setNumberOperation('');
       setRandomStringActive(false);
     }
@@ -127,7 +131,9 @@ function CalculatorPage({ balance, rates }) {
    */
   const onSubmit = async () => {
     if (numberOp.indexOf('√') !== -1) {
+      setSubmitDisabled(true);
       const { total, balance } = await submitRootRequest(numberOp, OPERATIONS_UI.root);
+      setSubmitDisabled(false);
       updateCalculatorData(total, balance);
       setRateType(OPERATIONS_UI.root);
       return;
@@ -144,12 +150,16 @@ function CalculatorPage({ balance, rates }) {
     if(sequentialOperation) {
       // handles calculation for sequential operations e.g: 5+5+10+34, 4-3-3-3
       const [type] = operations;
+      setSubmitDisabled(true);
       const { total, balance } = await submitNumRequest(numberOp, OPERATIONS_UI[type]);
+      setSubmitDisabled(false);
       setRateType(OPERATIONS_UI[type]);
       updateCalculatorData(total, balance);      
     } else {
       // handles calculation with different operations e.g: 5+545/5545*44323
+      setSubmitDisabled(true);
       const { total, balance } = await submitNumRequest(numberOp, OPERATIONS_UI.equation);
+      setSubmitDisabled(false);
       setRateType(OPERATIONS_UI.random);
       updateCalculatorData(total, balance);
     }
@@ -159,6 +169,7 @@ function CalculatorPage({ balance, rates }) {
    * Handles fetching random string
    */
   const handleRandomPress = async() => {
+    setSubmitDisabled(true);
     const { balance, total } = await submitRandomStringRequest(OPERATIONS_UI.random);
     setRandomStringActive(true);
     setRateType(OPERATIONS_UI.random);
@@ -170,8 +181,9 @@ function CalculatorPage({ balance, rates }) {
   * TODO: handle root operation with the rest, isolated for now
   * @param {String}
   */
-  const handleRootPress = (val) => {
+  const handleRootPress = () => {
     if(isRandomStringActive) {
+      setSubmitDisabled(false);
       setNumberOperation('√');
       setRandomStringActive(false);
       return;
@@ -199,6 +211,7 @@ function CalculatorPage({ balance, rates }) {
             onDelete={handleDelete}
             onOperationPress={handleOperationPress}
             onSubmit={onSubmit}
+            submitDisabled={submitDisabled}
           />
         </div>
         <RateChart rates={rates}/>

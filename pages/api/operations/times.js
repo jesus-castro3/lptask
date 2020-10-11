@@ -1,9 +1,11 @@
-import calculatorHandler from '../../../services/calculatorMiddleware';
+import nc from 'next-connect'
 import stringCalculator from '../../../services/stringCalculator';
+import calculatorMiddleware from '../../../services/calculatorMiddleware';
 
-const handler = calculatorHandler
+const handler = nc()
+  .use(calculatorMiddleware)
   .post(async(req, res) => {
-
+    console.log('times:::');
     try {
       const { balance } = req;
       const { equation } = req.body;

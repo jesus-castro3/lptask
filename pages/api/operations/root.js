@@ -1,8 +1,10 @@
 import Decimal from 'decimal.js';
-import calculatorHandler from '../../../services/calculatorMiddleware';
+import nc from 'next-connect'
 import stringCalculator from '../../../services/stringCalculator';
+import calculatorMiddleware from '../../../services/calculatorMiddleware';
 
-const handler = calculatorHandler
+const handler = nc()
+  .use(calculatorMiddleware)
   .post(async (req, res) => {
     try {
       const { balance } = req;

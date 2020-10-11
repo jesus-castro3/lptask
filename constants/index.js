@@ -7,11 +7,11 @@ export const ROOT = 'root';
 export const EQUATION = 'equation';
 
 export const OPERATIONS_ENUM = Object.freeze({
-  [ADD]: ADD ,
-  [SUBTRACT]: SUBTRACT ,
-  [TIMES]: TIMES ,
-  [DIVIDE]: DIVIDE ,
-  [RANDOM]: RANDOM ,
+  [ADD]: ADD,
+  [SUBTRACT]: SUBTRACT,
+  [TIMES]: TIMES,
+  [DIVIDE]: DIVIDE,
+  [RANDOM]: RANDOM,
   [ROOT]: ROOT,
   [EQUATION]: EQUATION,
 });
