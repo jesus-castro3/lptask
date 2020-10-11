@@ -1,14 +1,11 @@
-import nc from 'next-connect';
-import { getSession } from 'next-auth/client';
+import calculatorHandler from '../../../services/calculatorMiddleware';
+import stringCalculator from '../../../services/stringCalculator';
 
-import { RANDOM } from '../../../constants';
-import updateBalance from '../../../services/updateBalance';
+const handler = calculatorHandler
+  .post(async (req, res) => {
 
-const handler = nc()
-  .get(async (req, res) => {
     try {
-      const { user } = await getSession({ req });
-      const balance = await updateBalance(user.id, RANDOM);
+      const { balance } = req;
       //@TODO: integrate random string into stringCalculator
       let randomString = '';
       // we generate a 24 char string
@@ -26,8 +23,9 @@ const handler = nc()
         balance
       });
     } catch (e) {
+      console.error(e);
       res.statusCode = 500;
-      res.json({ error: true, total: 'Error', balance: 0 });
+      res.json({ error: true, total: 'Unable to complete random operation' });
     } 
   });
 

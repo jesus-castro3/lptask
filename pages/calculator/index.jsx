@@ -13,7 +13,7 @@ import BalanceBanner from '../../components/BalanceBanner/BalanceBanner';
 import CalculatorKeypad from '../../components/CalculatorKeypad/CalculatorKeypad';
 import CalculatorWindow from '../../components/CalculatorWindow/CalculatorWindow';
 import RateChart from '../../components/RateChart/RateChart';
-import { OPERATIONS } from '../../constants';
+import { OPERATIONS_UI } from '../../constants';
 
 import styles from './calculator.module.css';
 
@@ -127,9 +127,9 @@ function CalculatorPage({ balance, rates }) {
    */
   const onSubmit = async () => {
     if (numberOp.indexOf('√') !== -1) {
-      const { total, balance } = await submitRootRequest(numberOp, OPERATIONS.root);
+      const { total, balance } = await submitRootRequest(numberOp, OPERATIONS_UI.root);
       updateCalculatorData(total, balance);
-      setRateType(OPERATIONS.root);
+      setRateType(OPERATIONS_UI.root);
       return;
     }
     const numbers = numberOp.split(/\*|\+|\/|\-/);
@@ -144,13 +144,13 @@ function CalculatorPage({ balance, rates }) {
     if(sequentialOperation) {
       // handles calculation for sequential operations e.g: 5+5+10+34, 4-3-3-3
       const [type] = operations;
-      const { total, balance } = await submitNumRequest(numberOp, OPERATIONS[type]);
-      setRateType(OPERATIONS[type]);
+      const { total, balance } = await submitNumRequest(numberOp, OPERATIONS_UI[type]);
+      setRateType(OPERATIONS_UI[type]);
       updateCalculatorData(total, balance);      
     } else {
       // handles calculation with different operations e.g: 5+545/5545*44323
-      const { total, balance } = await submitNumRequest(numberOp);
-      setRateType(OPERATIONS.random);
+      const { total, balance } = await submitNumRequest(numberOp, OPERATIONS_UI.equation);
+      setRateType(OPERATIONS_UI.random);
       updateCalculatorData(total, balance);
     }
   };
@@ -159,9 +159,9 @@ function CalculatorPage({ balance, rates }) {
    * Handles fetching random string
    */
   const handleRandomPress = async() => {
-    const { balance, total } = await submitRandomStringRequest(OPERATIONS.random);
+    const { balance, total } = await submitRandomStringRequest(OPERATIONS_UI.random);
     setRandomStringActive(true);
-    setRateType(OPERATIONS.random);
+    setRateType(OPERATIONS_UI.random);
     updateCalculatorData(total, balance);
   }
 

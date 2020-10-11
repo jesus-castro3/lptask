@@ -1,20 +1,13 @@
 import Decimal from 'decimal.js';
-import nc from 'next-connect';
-import { getSession } from 'next-auth/client';
-import bodyParser from 'body-parser';
-
-import { ROOT } from '../../../constants';
-import updateBalance from '../../../services/updateBalance';
+import calculatorHandler from '../../../services/calculatorMiddleware';
 import stringCalculator from '../../../services/stringCalculator';
 
-const handler = nc()
-  .use(bodyParser)
+const handler = calculatorHandler
   .post(async (req, res) => {
     try {
-      const { user } = await getSession({ req });
-      const balance = await updateBalance(user.id, ROOT);
+      const { balance } = req;
+      const { equation } = req.body;
       // @TODO: incorporate root into stringCalculator or not? 
-      const { equation } = JSON.parse(req.body);
       // might be better to split by 'root'...might
       const rootHowMany = equation.split('').filter(v => v === '√').length;
       const equationsToSolve = equation.split('√').filter(v => v);
@@ -26,10 +19,11 @@ const handler = nc()
       res.statusCode = 201;
       res.json({ total, balance });
     } catch (e) {
+      console.error(e);
       res.statusCode = 500;
       res.json({
         error: true,
-        errorMessage: e
+        errorMsg: 'Unable to complete root operation'
       });
     }
   });

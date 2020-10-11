@@ -33,6 +33,12 @@ async function seed() {
     update: { rate: 0.5, type: operations.random },
     create: { rate: 0.5, type: operations.random }
   });
+
+  await prisma.rate.upsert({
+    where: { id: 7},
+    update: { rate: 1, type: operations.equation },
+    create: { rate: 1, type: operations.equation }
+  });
   console.log('Rate seed added::', operations);
 }
 

@@ -12,7 +12,7 @@
 export const submitNumRequest = async (equation, type = '') => {
   let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${type}`, {
     method: 'post',
-    body: JSON.stringify({ equation })
+    body: JSON.stringify({ equation, type })
   });
    let res = await response.json();
    return res;
@@ -25,7 +25,8 @@ export const submitNumRequest = async (equation, type = '') => {
  */
 export const submitRandomStringRequest = async (type) => {
   let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${type}`, {
-    method: 'get',
+    method: 'post',
+    body: JSON.stringify({ type })
   });
   return await response.json();
 }
@@ -38,21 +39,8 @@ export const submitRandomStringRequest = async (type) => {
 export const submitRootRequest = async (equation, type) => {
   let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/operations/${type}`, {
     method: 'post',
-    body: JSON.stringify({ equation })
+    body: JSON.stringify({ equation, type })
   });
   return await response.json();
 }
-
-/**
- * Ends user session, removes cookie auth
- * @param {String}
- * @return { error: Boolean }
- */
-export const endUserSession = async (id) => {
-  let userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
-    method: 'delete'
-  });
-  return await userResponse.text();
-}
-
 

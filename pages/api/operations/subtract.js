@@ -1,25 +1,22 @@
-import nc from 'next-connect';
-import { getSession } from 'next-auth/client';
-
-import { SUBTRACT } from '../../../constants';
+import calculatorHandler from '../../../services/calculatorMiddleware';
 import stringCalculator from '../../../services/stringCalculator';
-import updateBalance from '../../../services/updateBalance';
 
-const handler = nc()
+const handler = calculatorHandler
   .post(async (req, res) => {
+
     try {
-      const { user } = await getSession({ req });
-      const balance = await updateBalance(user.id, SUBTRACT);
-      const { equation } = JSON.parse(req.body);
+      const { balance } = req;
+      const { equation } = req.body;
       const total = stringCalculator(equation);
-    
+      
       res.statusCode = 201;
       res.json({ total, balance });
     } catch(e) {
+      console.error(e);
       res.statusCode = 500;
-      res.send('Unable to complete subtract operation', e);
       res.json({
-        error: true
+        error: true,
+        errorMsg: 'Unable to complete subtract operation'
       });
     }
   });
