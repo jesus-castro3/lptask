@@ -19,7 +19,8 @@
     "migrate:up": "docker exec -it app prisma migrate up --experimental -c"
   },
   "engines": {
-    "node": "12.18.4"
+    "node": "12.18.4",
+    "npm": "6.11.3"
   },
   "dependencies": {
     "@prisma/client": "^2.8.1",
@@ -30,9 +31,7 @@
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
-  },
-  "devDependencies": {
+    "react-dom": "16.13.1",
     "@prisma/cli": "^2.7.1"
   }
 }
