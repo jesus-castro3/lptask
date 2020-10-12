@@ -23,7 +23,7 @@
     "npm": "6.11.3"
   },
   "dependencies": {
-    "@prisma/client": "^2.8.1",
+    "@prisma/client": "^2.7.1",
     "decimal.js": "^10.2.1",
     "next": "9.5.3",
     "next-auth": "^3.1.0",
