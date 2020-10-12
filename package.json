@@ -19,6 +19,7 @@
     "migrate:up": "docker exec -it app prisma migrate up --experimental -c"
   },
   "dependencies": {
+    "@prisma/client": "^2.8.1",
     "decimal.js": "^10.2.1",
     "next": "9.5.3",
     "next-auth": "^3.1.0",
